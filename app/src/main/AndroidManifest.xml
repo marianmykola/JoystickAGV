@@ -6,7 +6,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="JoystickApp"
+        android:label="JoystickAGV"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity
