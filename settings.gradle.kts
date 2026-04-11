@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Joystick"
+rootProject.name = "JoystickAGV"
 include(":app")

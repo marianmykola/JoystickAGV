@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.joystick"
+    namespace = "com.example.JoystickAGV"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.joystick"
+        applicationId = "com.example.JoystickAGV"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
