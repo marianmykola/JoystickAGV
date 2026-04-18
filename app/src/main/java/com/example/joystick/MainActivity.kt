@@ -1,4 +1,4 @@
-package com.example.JoystickAGV
+package com.example.joystick
 
 import android.os.Bundle
 import android.os.Handler
