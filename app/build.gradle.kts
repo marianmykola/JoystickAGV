@@ -41,8 +41,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("org.apache.plc4x:plc4j-api:0.12.0")
-    implementation("org.apache.plc4x:plc4j-driver-s7:0.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

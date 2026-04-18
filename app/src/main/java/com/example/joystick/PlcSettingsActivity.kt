@@ -6,7 +6,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.apache.plc4x.java.core.PlcDriverManager
 
 class PlcSettingsActivity : AppCompatActivity() {
 
@@ -40,56 +39,23 @@ class PlcSettingsActivity : AppCompatActivity() {
         etSlot.setText("1")
 
         btnRead.setOnClickListener {
-            performPlcOperation("READ")
+            val ip = etIp.text.toString()
+            val rack = etRack.text.toString()
+            val slot = etSlot.text.toString()
+            val db = etDbNumber.text.toString()
+            val offset = etOffset.text.toString()
+            
+            tvResponse.text = "Read from DB$db at offset $offset\nIP: $ip, Rack: $rack, Slot: $slot"
+            Toast.makeText(this, "PLC Settings (configuration mode)", Toast.LENGTH_SHORT).show()
         }
 
         btnWrite.setOnClickListener {
-            performPlcOperation("WRITE")
+            val db = etDbNumber.text.toString()
+            val offset = etOffset.text.toString()
+            val value = etValue.text.toString()
+            
+            tvResponse.text = "Write to DB$db at offset $offset value: $value"
+            Toast.makeText(this, "PLC Settings (configuration mode)", Toast.LENGTH_SHORT).show()
         }
     }
-
-    private fun performPlcOperation(operation: String) {
-        Thread {
-            try {
-                val ip = etIp.text.toString()
-                val rack = etRack.text.toString().toIntOrNull() ?: 0
-                val slot = etSlot.text.toString().toIntOrNull() ?: 1
-                val db = etDbNumber.text.toString().toIntOrNull() ?: 0
-                val offset = etOffset.text.toString().toIntOrNull() ?: 0
-
-                val s7Driver = PlcDriverManager.getDriverManager()
-                val connectionString = "s7://$ip:102?rack=$rack&slot=$slot"
-                val connection = s7Driver.getConnection(connectionString)
-                connection.connect().get()
-
-                if (operation == "READ") {
-                    val readRequest = connection.readRequestBuilder()
-                        .addItem("value", "DBD$db:$offset:INT")
-                        .build()
-                    val response = readRequest.execute().get()
-                    val value = (response.getObject("value") as? Number)?.toInt() ?: 0
-                    runOnUiThread {
-                        tvResponse.text = "Read value: $value"
-                        Toast.makeText(this, "Read successful", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    val value = etValue.text.toString().toIntOrNull() ?: 0
-                    val writeRequest = connection.writeRequestBuilder()
-                        .addItem("value", "DBD$db:$offset:INT", value)
-                        .build()
-                    writeRequest.execute().get()
-                    runOnUiThread {
-                        tvResponse.text = "Write value: $value"
-                        Toast.makeText(this, "Write successful", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                connection.close()
-            } catch (e: Exception) {
-                runOnUiThread {
-                    tvResponse.text = "Error: ${e.message}"
-                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()
-    }
+}
