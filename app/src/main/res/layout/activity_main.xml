@@ -105,7 +105,7 @@
     </RadioGroup>
 
     <!-- LEFT JOYSTICK -->
-    <com.example.joystick.JoystickView
+    <com.example.JoystickAGV.JoystickView
         android:id="@+id/joystickLeft"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -116,7 +116,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- RIGHT JOYSTICK -->
-    <com.example.joystick.JoystickView
+    <com.example.JoystickAGV.JoystickView
         android:id="@+id/joystickRight"
         android:layout_width="0dp"
         android:layout_height="0dp"
