@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Button
-import android.widget.RadioGroup
+import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnDMS: ToggleButton
     private lateinit var btnEstop: ToggleButton
     private lateinit var btnPlcSettings: Button
-    private lateinit var rotateSwitch: RadioGroup
+    private lateinit var rotatePicker: NumberPicker
 
     private var lx = 0
     private var ly = 0
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         btnDMS = findViewById(R.id.btnDMS)
         btnEstop = findViewById(R.id.btnEstop)
         btnPlcSettings = findViewById(R.id.btnPlcSettings)
-        rotateSwitch = findViewById(R.id.rotateSwitch)
+        rotatePicker = findViewById(R.id.rotatePicker)
 
         joystickLeft.setOnMoveListener { x, y ->
             lx = x
@@ -97,16 +97,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        rotateSwitch.setOnCheckedChangeListener { group, checkedId ->
-            rotate = when(checkedId) {
-                R.id.rotate1 -> 1
-                R.id.rotate2 -> 2
-                R.id.rotate3 -> 3
-                R.id.rotate4 -> 4
-                R.id.rotate5 -> 5
-                R.id.rotate6 -> 6
-                else -> 1
-            }
+        rotatePicker.minValue = 1
+        rotatePicker.maxValue = 6
+        rotatePicker.value = 1
+        rotatePicker.setOnValueChangedListener { picker, oldVal, newVal ->
+            rotate = newVal
         }
 
         btnPlcSettings.setOnClickListener {

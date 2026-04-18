@@ -7,101 +7,233 @@
     android:background="@android:color/black">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="PLC Settings"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"
+        android:textAlignment="center" />
 
-    <EditText
-        android:id="@+id/etIp"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="PLC IP Address"
-        android:inputType="text"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/gray"
-        android:layout_marginBottom="8dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <EditText
-        android:id="@+id/etRack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Rack"
-        android:inputType="number"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/gray"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/etSlot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Slot"
-        android:inputType="number"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/gray"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/etDbNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="DB Number"
-        android:inputType="number"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/gray"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/etOffset"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Offset (bytes)"
-        android:inputType="number"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/gray"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/etValue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Value (for write)"
-        android:inputType="number"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/gray"
-        android:layout_marginBottom="16dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnRead"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Read"
-            android:layout_marginEnd="8dp" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnWrite"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Write" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-    <TextView
-        android:id="@+id/tvResponse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Response will appear here"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="IP:"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/etIp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="192.168.0.40"
+                    android:inputType="text"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/gray"
+                    android:backgroundTint="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Rack:"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/etRack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/gray"
+                    android:backgroundTint="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Slot:"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/etSlot"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="1"
+                    android:inputType="number"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/gray"
+                    android:backgroundTint="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="DB:"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/etDbNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/gray"
+                    android:backgroundTint="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Offset:"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/etOffset"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/gray"
+                    android:backgroundTint="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Value:"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/etValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/gray"
+                    android:backgroundTint="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <Button
+                    android:id="@+id/btnRead"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:text="Read"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnWrite"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:text="Write"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Response:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvResponse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Waiting for action..."
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:padding="12dp"
+                android:background="@color/darker_gray" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
