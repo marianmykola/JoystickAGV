@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                 val address = InetAddress.getByName(ip)
 
                 val version = "01"
-                val packet = String.format("%02X", packetNumber)
+                val packetStr = String.format("%02X", packetNumber)
                 val rot = String.format("%02d", rotate)
                 val status = if (estopChecked) "00" else if (dmsChecked) "03" else "01"
                 val lxHex = String.format("%04X", lx.toShort())
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                 val rxHex = String.format("%04X", rx.toShort())
                 val ryHex = String.format("%04X", ry.toShort())
 
-                val message = version + packet + rot + status + lxHex + lyHex + rxHex + ryHex
+                val message = version + packetStr + rot + status + lxHex + lyHex + rxHex + ryHex
                 val data = message.toByteArray()
 
                 val packet = DatagramPacket(data, data.size, address, port)
