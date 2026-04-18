@@ -6,9 +6,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.github.s7connector.api.S7Connector
-import com.github.s7connector.api.factory.S7ConnectorFactory
-import com.github.s7connector.impl.utils.S7Type
+import org.apache.plc4x.java.PlcDriverManager
 
 class PlcSettingsActivity : AppCompatActivity() {
 
@@ -59,31 +57,34 @@ class PlcSettingsActivity : AppCompatActivity() {
                 val db = etDbNumber.text.toString().toIntOrNull() ?: 0
                 val offset = etOffset.text.toString().toIntOrNull() ?: 0
 
-                val connector: S7Connector = S7ConnectorFactory.buildTCPConnector()
-                    .withHost(ip)
-                    .withRack(rack)
-                    .withSlot(slot)
-                    .build()
-
-                connector.connect()
+                val plcDriverManager = PlcDriverManager()
+                val connectionString = "s7://$ip/$rack/$slot"
+                val connection = plcDriverManager.getConnection(connectionString)
+                connection.connect().get()
 
                 if (operation == "READ") {
-                    val data = connector.read(S7Type.DB, db, offset, S7Type.INT, 1)
-                    val value = data[0] as Int
+                    val readRequest = connection.readRequestBuilder()
+                        .addItem("value", "%DB$db:DBW$offset:INT")
+                        .build()
+                    val response = readRequest.execute().get()
+                    val value = response.getInteger("value")
                     runOnUiThread {
                         tvResponse.text = "Read value: $value"
                         Toast.makeText(this, "Read successful", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     val value = etValue.text.toString().toIntOrNull() ?: 0
-                    connector.write(S7Type.DB, db, offset, S7Type.INT, value)
+                    val writeRequest = connection.writeRequestBuilder()
+                        .addItem("value", "%DB$db:DBW$offset:INT", value)
+                        .build()
+                    writeRequest.execute().get()
                     runOnUiThread {
                         tvResponse.text = "Write value: $value"
                         Toast.makeText(this, "Write successful", Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                connector.close()
+                connection.close()
             } catch (e: Exception) {
                 runOnUiThread {
                     tvResponse.text = "Error: ${e.message}"
