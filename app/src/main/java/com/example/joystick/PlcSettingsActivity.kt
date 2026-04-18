@@ -6,7 +6,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.apache.plc4x.java.PlcDriverManager
+import org.apache.plc4x.java.core.PlcDriverManager
 
 class PlcSettingsActivity : AppCompatActivity() {
 
@@ -57,17 +57,17 @@ class PlcSettingsActivity : AppCompatActivity() {
                 val db = etDbNumber.text.toString().toIntOrNull() ?: 0
                 val offset = etOffset.text.toString().toIntOrNull() ?: 0
 
-                val plcDriverManager = PlcDriverManager()
-                val connectionString = "s7://$ip/$rack/$slot"
-                val connection = plcDriverManager.getConnection(connectionString)
+                val s7Driver = PlcDriverManager.getDriverManager()
+                val connectionString = "s7://$ip:102?rack=$rack&slot=$slot"
+                val connection = s7Driver.getConnection(connectionString)
                 connection.connect().get()
 
                 if (operation == "READ") {
                     val readRequest = connection.readRequestBuilder()
-                        .addItem("value", "%DB$db:DBW$offset:INT")
+                        .addItem("value", "DBD$db:$offset:INT")
                         .build()
                     val response = readRequest.execute().get()
-                    val value = response.getInteger("value")
+                    val value = (response.getObject("value") as? Number)?.toInt() ?: 0
                     runOnUiThread {
                         tvResponse.text = "Read value: $value"
                         Toast.makeText(this, "Read successful", Toast.LENGTH_SHORT).show()
@@ -75,7 +75,7 @@ class PlcSettingsActivity : AppCompatActivity() {
                 } else {
                     val value = etValue.text.toString().toIntOrNull() ?: 0
                     val writeRequest = connection.writeRequestBuilder()
-                        .addItem("value", "%DB$db:DBW$offset:INT", value)
+                        .addItem("value", "DBD$db:$offset:INT", value)
                         .build()
                     writeRequest.execute().get()
                     runOnUiThread {
@@ -93,4 +93,3 @@ class PlcSettingsActivity : AppCompatActivity() {
             }
         }.start()
     }
-}

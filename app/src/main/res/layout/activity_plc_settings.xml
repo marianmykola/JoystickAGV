@@ -22,7 +22,7 @@
         android:hint="PLC IP Address"
         android:inputType="text"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/gray"
+        android:textColorHint="@color/gray"
         android:layout_marginBottom="8dp" />
 
     <EditText
@@ -32,7 +32,7 @@
         android:hint="Rack"
         android:inputType="number"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/gray"
+        android:textColorHint="@color/gray"
         android:layout_marginBottom="8dp" />
 
     <EditText
@@ -42,7 +42,7 @@
         android:hint="Slot"
         android:inputType="number"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/gray"
+        android:textColorHint="@color/gray"
         android:layout_marginBottom="8dp" />
 
     <EditText
@@ -52,7 +52,7 @@
         android:hint="DB Number"
         android:inputType="number"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/gray"
+        android:textColorHint="@color/gray"
         android:layout_marginBottom="8dp" />
 
     <EditText
@@ -62,7 +62,7 @@
         android:hint="Offset (bytes)"
         android:inputType="number"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/gray"
+        android:textColorHint="@color/gray"
         android:layout_marginBottom="8dp" />
 
     <EditText
@@ -72,7 +72,7 @@
         android:hint="Value (for write)"
         android:inputType="number"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/gray"
+        android:textColorHint="@color/gray"
         android:layout_marginBottom="16dp" />
 
     <LinearLayout
