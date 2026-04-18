@@ -10,6 +10,7 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 import android.graphics.Color
 import android.widget.ToggleButton
+import android.widget.RadioGroup
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtValues: TextView
     private lateinit var btnStart: ToggleButton
     private lateinit var btnDMS: ToggleButton
+    private lateinit var btnEstop: ToggleButton
+    private lateinit var rotateSwitch: RadioGroup
 
     private var lx = 0
     private var ly = 0
@@ -26,6 +29,11 @@ class MainActivity : AppCompatActivity() {
 
     private var sending = false
     private val handler = Handler(Looper.getMainLooper())
+
+    private var rotate = 1
+    private var packetNumber = 0
+    private var estopChecked = false
+    private var dmsChecked = false
 
     private val ip = "192.168.0.40"
     private val port = 3004
@@ -38,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         joystickRight = findViewById(R.id.joystickRight)
         txtValues = findViewById(R.id.txtValues)
         btnStart = findViewById(R.id.btnStart)
+        btnDMS = findViewById(R.id.btnDMS)
+        btnEstop = findViewById(R.id.btnEstop)
+        rotateSwitch = findViewById(R.id.rotateSwitch)
 
         joystickLeft.setOnMoveListener { x, y ->
             lx = x
@@ -63,13 +74,34 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnDMS.setOnCheckedChangeListener { button, isChecked ->
-            sending = isChecked
+            dmsChecked = isChecked
 
             if (isChecked) {
                 button.setBackgroundColor(Color.GREEN)
-                startSending()
             } else {
                 button.setBackgroundColor(Color.GRAY)
+            }
+        }
+
+        btnEstop.setOnCheckedChangeListener { button, isChecked ->
+            estopChecked = isChecked
+
+            if (isChecked) {
+                button.setBackgroundColor(Color.RED)
+            } else {
+                button.setBackgroundColor(Color.GRAY)
+            }
+        }
+
+        rotateSwitch.setOnCheckedChangeListener { group, checkedId ->
+            rotate = when(checkedId) {
+                R.id.rotate1 -> 1
+                R.id.rotate2 -> 2
+                R.id.rotate3 -> 3
+                R.id.rotate4 -> 4
+                R.id.rotate5 -> 5
+                R.id.rotate6 -> 6
+                else -> 1
             }
         }
     }
@@ -83,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
                 if (sending) {
                     sendUdp()
-                    handler.postDelayed(this, 500) // every 0.5 sec
+                    handler.postDelayed(this, 50) // every 50 ms
                 }
             }
         })
@@ -95,12 +127,23 @@ class MainActivity : AppCompatActivity() {
                 val socket = DatagramSocket()
                 val address = InetAddress.getByName(ip)
 
-                val message = "L:$lx,$ly;R:$rx,$ry"
+                val version = "01"
+                val packet = String.format("%02X", packetNumber)
+                val rot = String.format("%02d", rotate)
+                val status = if (estopChecked) "00" else if (dmsChecked) "03" else "01"
+                val lxHex = String.format("%04X", lx.toShort())
+                val lyHex = String.format("%04X", ly.toShort())
+                val rxHex = String.format("%04X", rx.toShort())
+                val ryHex = String.format("%04X", ry.toShort())
+
+                val message = version + packet + rot + status + lxHex + lyHex + rxHex + ryHex
                 val data = message.toByteArray()
 
                 val packet = DatagramPacket(data, data.size, address, port)
                 socket.send(packet)
                 socket.close()
+
+                packetNumber = (packetNumber + 1) % 256
 
             } catch (e: Exception) {
                 e.printStackTrace()

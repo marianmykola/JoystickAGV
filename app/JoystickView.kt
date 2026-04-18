@@ -63,8 +63,8 @@ class JoystickView(context: Context) : View(context) {
                 posY = centerY + dy * ratio
             }
 
-            val xPercent = ((posX - centerX) / baseRadius * 100).toInt()
-            val yPercent = ((centerY - posY) / baseRadius * 100).toInt()
+            val xPercent = ((posX - centerX) / baseRadius * 1000).toInt()
+            val yPercent = ((centerY - posY) / baseRadius * 1000).toInt()
 
             listener?.invoke(xPercent, yPercent)
 
