@@ -1,16 +1,18 @@
 package com.example.JoystickAGV
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Button
+import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import android.graphics.Color
-import android.widget.ToggleButton
-import android.widget.RadioGroup
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnStart: ToggleButton
     private lateinit var btnDMS: ToggleButton
     private lateinit var btnEstop: ToggleButton
+    private lateinit var btnPlcSettings: Button
     private lateinit var rotateSwitch: RadioGroup
 
     private var lx = 0
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         btnStart = findViewById(R.id.btnStart)
         btnDMS = findViewById(R.id.btnDMS)
         btnEstop = findViewById(R.id.btnEstop)
+        btnPlcSettings = findViewById(R.id.btnPlcSettings)
         rotateSwitch = findViewById(R.id.rotateSwitch)
 
         joystickLeft.setOnMoveListener { x, y ->
@@ -103,6 +107,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.rotate6 -> 6
                 else -> 1
             }
+        }
+
+        btnPlcSettings.setOnClickListener {
+            val intent = Intent(this, PlcSettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 

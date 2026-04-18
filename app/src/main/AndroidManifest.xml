@@ -21,6 +21,11 @@
 
         </activity>
 
+        <activity
+            android:name=".PlcSettingsActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
     </application>
 
 </manifest>
