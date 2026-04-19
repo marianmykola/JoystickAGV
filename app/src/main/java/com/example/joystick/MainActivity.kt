@@ -111,11 +111,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateText() {
-        val lxPercent = lx
-        val lyPercent = ly
-        val rxPercent = rx
-        val ryPercent = ry
-        txtValues.text = "L: ${lxPercent}%, ${lyPercent}% | R: ${rxPercent}%, ${ryPercent}%"
+        val lxPercent = (lx / 10.0)
+        val lyPercent = (ly / 10.0)
+        val rxPercent = (rx / 10.0)
+        val ryPercent = (ry / 10.0)
+        txtValues.text = "L: ${"%.1f".format(lxPercent)}%, ${"%.1f".format(lyPercent)}% | R: ${"%.1f".format(rxPercent)}%, ${"%.1f".format(ryPercent)}%"
     }
 
     private fun startSending() {

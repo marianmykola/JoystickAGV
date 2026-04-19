@@ -68,10 +68,10 @@ class JoystickView @JvmOverloads constructor(
                 posY = centerY + dy * ratio
             }
 
-            val xPercent = ((posX - centerX) / baseRadius * 100).toInt()
-            val yPercent = ((centerY - posY) / baseRadius * 100).toInt()
+            val xValue = ((posX - centerX) / baseRadius * 1000).toInt()
+            val yValue = ((centerY - posY) / baseRadius * 1000).toInt()
 
-            listener?.invoke(xPercent, yPercent)
+            listener?.invoke(xValue, yValue)
 
         } else {
             posX = centerX
