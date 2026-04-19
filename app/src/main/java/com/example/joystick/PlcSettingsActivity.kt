@@ -8,7 +8,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import si.trina.moka7.live.S7Client
+import si.trina.moka7.live.PLC
+import com.sourceforge.snap7.moka7.S7
 
 class PlcSettingsActivity : AppCompatActivity() {
 
@@ -22,10 +23,10 @@ class PlcSettingsActivity : AppCompatActivity() {
     private lateinit var tvResponse: TextView
     private lateinit var btnRead: Button
     private lateinit var btnWrite: Button
-    private var s7Client: S7Client? = null
+    private var plc: PLC? = null
 
-    private val dataTypes = arrayOf("INT (2 bytes)", "WORD (2 bytes)", "BYTE (1 byte)", "REAL (4 bytes)")
-    private val dataTypeValues = arrayOf(S7Client.S7WLInt, S7Client.S7WLWord, S7Client.S7WLByte, S7Client.S7WLReal)
+    private val dataTypes = arrayOf("INT (2 bytes)", "DINT (4 bytes)", "BOOL (1 bit)")
+    private val dataTypeValues = arrayOf("INT", "DINT", "BOOL")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,32 +72,31 @@ class PlcSettingsActivity : AppCompatActivity() {
                 val db = etDbNumber.text.toString().toIntOrNull() ?: 0
                 val offset = etOffset.text.toString().toIntOrNull() ?: 0
                 val dataTypeIndex = spinnerDataType.selectedItemPosition
-                val wordLen = dataTypeValues[dataTypeIndex]
+                val dataType = dataTypeValues[dataTypeIndex]
 
-                s7Client = S7Client.createClient()
-                val result = s7Client!!.connectTo(ip, rack, slot)
+                // Create PLC instance
+                plc = PLC("AGV_PLC", ip, 64, 64, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
 
-                if (result == 0) {
-                    val buffer = when (wordLen) {
-                        S7Client.S7WLByte -> ByteArray(1)
-                        S7Client.S7WLWord, S7Client.S7WLInt -> ByteArray(2)
-                        S7Client.S7WLReal -> ByteArray(4)
-                        else -> ByteArray(2)
+                val value = when (dataType) {
+                    "INT" -> {
+                        val intValue = plc!!.getInt(true, offset)
+                        "INT: $intValue"
                     }
-
-                    s7Client!!.readArea(S7Client.S7AreaDB, db, offset, 1, wordLen, buffer)
-                    val value = parseValueFromBuffer(buffer, wordLen)
-                    s7Client!!.disconnect()
-
-                    runOnUiThread {
-                        tvResponse.text = "Read from DB$db at offset $offset\nData Type: ${dataTypes[dataTypeIndex]}\nValue: $value"
-                        Toast.makeText(this@PlcSettingsActivity, "Read successful: $value", Toast.LENGTH_SHORT).show()
+                    "DINT" -> {
+                        val dintValue = plc!!.getDInt(true, offset)
+                        "DINT: $dintValue"
                     }
-                } else {
-                    runOnUiThread {
-                        tvResponse.text = "Connection error: $result"
-                        Toast.makeText(this@PlcSettingsActivity, "Connection failed", Toast.LENGTH_SHORT).show()
+                    "BOOL" -> {
+                        val bitPos = 0 // For simplicity, read bit 0
+                        val boolValue = plc!!.getBool(true, offset, bitPos)
+                        "BOOL (bit $bitPos): $boolValue"
                     }
+                    else -> "Unknown data type"
+                }
+
+                runOnUiThread {
+                    tvResponse.text = "Read from DB$db at offset $offset\nData Type: ${dataTypes[dataTypeIndex]}\nValue: $value"
+                    Toast.makeText(this@PlcSettingsActivity, "Read successful: $value", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 runOnUiThread {
@@ -117,26 +117,30 @@ class PlcSettingsActivity : AppCompatActivity() {
                 val offset = etOffset.text.toString().toIntOrNull() ?: 0
                 val valueStr = etValue.text.toString()
                 val dataTypeIndex = spinnerDataType.selectedItemPosition
-                val wordLen = dataTypeValues[dataTypeIndex]
+                val dataType = dataTypeValues[dataTypeIndex]
 
-                s7Client = S7Client.createClient()
-                val result = s7Client!!.connectTo(ip, rack, slot)
+                // Create PLC instance
+                plc = PLC("AGV_PLC", ip, 64, 64, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
 
-                if (result == 0) {
-                    val buffer = createBufferFromValue(valueStr, wordLen)
-
-                    s7Client!!.writeArea(S7Client.S7AreaDB, db, offset, 1, wordLen, buffer)
-                    s7Client!!.disconnect()
-
-                    runOnUiThread {
-                        tvResponse.text = "Write to DB$db at offset $offset\nData Type: ${dataTypes[dataTypeIndex]}\nValue: $valueStr"
-                        Toast.makeText(this@PlcSettingsActivity, "Write successful: $valueStr", Toast.LENGTH_SHORT).show()
+                when (dataType) {
+                    "INT" -> {
+                        val value = valueStr.toIntOrNull() ?: 0
+                        plc!!.putInt(false, offset, value.toShort())
                     }
-                } else {
-                    runOnUiThread {
-                        tvResponse.text = "Connection error: $result"
-                        Toast.makeText(this@PlcSettingsActivity, "Connection failed", Toast.LENGTH_SHORT).show()
+                    "DINT" -> {
+                        val value = valueStr.toIntOrNull() ?: 0
+                        plc!!.putDInt(false, offset, value)
                     }
+                    "BOOL" -> {
+                        val value = valueStr.toBoolean()
+                        val bitPos = 0 // For simplicity, write to bit 0
+                        plc!!.putBool(false, offset, bitPos, value)
+                    }
+                }
+
+                runOnUiThread {
+                    tvResponse.text = "Write to DB$db at offset $offset\nData Type: ${dataTypes[dataTypeIndex]}\nValue: $valueStr"
+                    Toast.makeText(this@PlcSettingsActivity, "Write successful: $valueStr", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 runOnUiThread {
@@ -147,66 +151,16 @@ class PlcSettingsActivity : AppCompatActivity() {
         }.start()
     }
 
-    private fun parseValueFromBuffer(buffer: ByteArray, wordLen: Int): String {
-        return when (wordLen) {
-            S7Client.S7WLByte -> {
-                (buffer[0].toInt() and 0xFF).toString()
-            }
-            S7Client.S7WLWord -> {
-                ((buffer[0].toInt() and 0xFF) or ((buffer[1].toInt() and 0xFF) shl 8)).toString()
-            }
-            S7Client.S7WLInt -> {
-                val value = ((buffer[0].toInt() and 0xFF) or ((buffer[1].toInt() and 0xFF) shl 8))
-                if (value > 32767) (value - 65536) else value
-            }.toString()
-            S7Client.S7WLReal -> {
-                val bits = ((buffer[0].toInt() and 0xFF) or
-                           ((buffer[1].toInt() and 0xFF) shl 8) or
-                           ((buffer[2].toInt() and 0xFF) shl 16) or
-                           ((buffer[3].toInt() and 0xFF) shl 24))
-                java.lang.Float.intBitsToFloat(bits).toString()
-            }
-            else -> "Unknown"
-        }
-    }
-
-    private fun createBufferFromValue(valueStr: String, wordLen: Int): ByteArray {
-        return when (wordLen) {
-            S7Client.S7WLByte -> {
-                val value = valueStr.toIntOrNull() ?: 0
-                byteArrayOf((value and 0xFF).toByte())
-            }
-            S7Client.S7WLWord -> {
-                val value = valueStr.toIntOrNull() ?: 0
-                byteArrayOf(
-                    (value and 0xFF).toByte(),
-                    ((value shr 8) and 0xFF).toByte()
-                )
-            }
-            S7Client.S7WLInt -> {
-                val value = valueStr.toIntOrNull() ?: 0
-                val intValue = if (value < 0) value + 65536 else value
-                byteArrayOf(
-                    (intValue and 0xFF).toByte(),
-                    ((intValue shr 8) and 0xFF).toByte()
-                )
-            }
-            S7Client.S7WLReal -> {
-                val value = valueStr.toFloatOrNull() ?: 0.0f
-                val bits = java.lang.Float.floatToIntBits(value)
-                byteArrayOf(
-                    (bits and 0xFF).toByte(),
-                    ((bits shr 8) and 0xFF).toByte(),
-                    ((bits shr 16) and 0xFF).toByte(),
-                    ((bits shr 24) and 0xFF).toByte()
-                )
-            }
-            else -> byteArrayOf(0, 0)
-        }
-    }
-
     override fun onDestroy() {
-        s7Client?.disconnect()
+        plc?.let {
+            // Stop the PLC thread if running
+            try {
+                // Note: moka7-live doesn't have explicit disconnect, but we can set connected to false
+                it.connected = false
+            } catch (e: Exception) {
+                // Ignore
+            }
+        }
         super.onDestroy()
     }
 }
