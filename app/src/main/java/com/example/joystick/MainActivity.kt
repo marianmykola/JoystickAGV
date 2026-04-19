@@ -10,9 +10,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
-import java.net.DatagramPacket
-import java.net.DatagramSocket
-import java.net.InetAddress
+import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity() {
 
@@ -135,17 +133,22 @@ class MainActivity : AppCompatActivity() {
                 val socket = DatagramSocket()
                 val address = InetAddress.getByName(ip)
 
-                val version = "01"
-                val packetStr = String.format("%02X", packetNumber)
-                val rot = String.format("%02d", rotate)
-                val status = if (estopChecked) "00" else if (dmsChecked) "03" else "01"
-                val lxHex = String.format("%04X", lx.toShort())
-                val lyHex = String.format("%04X", ly.toShort())
-                val rxHex = String.format("%04X", rx.toShort())
-                val ryHex = String.format("%04X", ry.toShort())
+                val buffer = ByteBuffer.allocate(12)
+                buffer.put(1.toByte())  // version
+                buffer.put(packetNumber.toByte())  // packet number
+                buffer.put(rotate.toByte())  // rotate
+                val statusByte = when {
+                    estopChecked -> 0.toByte()
+                    dmsChecked -> 3.toByte()
+                    else -> 1.toByte()
+                }
+                buffer.put(statusByte)  // status
+                buffer.putShort(lx.toShort())  // lx
+                buffer.putShort(ly.toShort())  // ly
+                buffer.putShort(rx.toShort())  // rx
+                buffer.putShort(ry.toShort())  // ry
 
-                val message = version + packetStr + rot + status + lxHex + lyHex + rxHex + ryHex
-                val data = message.toByteArray()
+                val data = buffer.array()
 
                 val packet = DatagramPacket(data, data.size, address, port)
                 socket.send(packet)
