@@ -153,14 +153,15 @@ class PlcSettingsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         plc?.let {
-            // Stop the PLC thread if running
             try {
-                // Note: moka7-live doesn't have explicit disconnect, but we can set connected to false
+                // Clean up PLC connection
                 it.connected = false
             } catch (e: Exception) {
-                // Ignore
+                // Log error but don't crash
+                e.printStackTrace()
             }
         }
+        plc = null
         super.onDestroy()
     }
 }

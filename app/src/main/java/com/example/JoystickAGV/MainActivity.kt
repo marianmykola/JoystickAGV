@@ -1,6 +1,7 @@
 package com.example.JoystickAGV
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +10,10 @@ import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.ToggleButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -39,12 +43,21 @@ class MainActivity : AppCompatActivity() {
     private var estopChecked = false
     private var dmsChecked = false
 
-    private val ip = "192.168.0.40"
-    private val port = 3004
+    companion object {
+        private const val PERMISSION_REQUEST_INTERNET = 1
+        private const val DEFAULT_IP = "192.168.0.40"
+        private const val DEFAULT_PORT = 3004
+    }
+
+    private var ip = DEFAULT_IP
+    private var port = DEFAULT_PORT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        // Check network permissions
+        checkNetworkPermissions()
 
         joystickLeft = findViewById(R.id.joystickLeft)
         joystickRight = findViewById(R.id.joystickRight)
@@ -132,8 +145,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendUdp() {
         Thread {
+            var socket: DatagramSocket? = null
             try {
-                val socket = DatagramSocket()
+                socket = DatagramSocket()
                 val address = InetAddress.getByName(ip)
 
                 val buffer = ByteBuffer.allocate(12)
@@ -152,16 +166,47 @@ class MainActivity : AppCompatActivity() {
                 buffer.putShort(ry.toShort())  // ry
 
                 val data = buffer.array()
-
                 val packet = DatagramPacket(data, data.size, address, port)
                 socket.send(packet)
-                socket.close()
 
                 packetNumber = (packetNumber + 1) % 256
 
             } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
                 e.printStackTrace()
+            } finally {
+                socket?.close()
             }
         }.start()
+    }
+
+    private fun checkNetworkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.INTERNET) 
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.INTERNET),
+                PERMISSION_REQUEST_INTERNET
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_INTERNET -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Internet permission granted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Internet permission required for UDP communication", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 }
