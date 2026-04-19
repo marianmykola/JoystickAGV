@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Button
-import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +22,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnDMS: ToggleButton
     private lateinit var btnEstop: ToggleButton
     private lateinit var btnPlcSettings: Button
-    private lateinit var rotatePicker: NumberPicker
+    private lateinit var btnRotatePlus: Button
+    private lateinit var btnRotateMinus: Button
+    private lateinit var txtRotateValue: TextView
 
     private var lx = 0
     private var ly = 0
@@ -52,7 +53,9 @@ class MainActivity : AppCompatActivity() {
         btnDMS = findViewById(R.id.btnDMS)
         btnEstop = findViewById(R.id.btnEstop)
         btnPlcSettings = findViewById(R.id.btnPlcSettings)
-        rotatePicker = findViewById(R.id.rotatePicker)
+        btnRotatePlus = findViewById(R.id.btnRotatePlus)
+        btnRotateMinus = findViewById(R.id.btnRotateMinus)
+        txtRotateValue = findViewById(R.id.txtRotateValue)
 
         joystickLeft.setOnMoveListener { x, y ->
             lx = x
@@ -97,12 +100,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        rotatePicker.minValue = 1
-        rotatePicker.maxValue = 6
-        rotatePicker.value = 1
-        rotatePicker.setOnValueChangedListener { picker, oldVal, newVal ->
-            rotate = newVal
+        btnRotatePlus.setOnClickListener {
+            if (rotate < 6) {
+                rotate++
+                txtRotateValue.text = rotate.toString()
+            }
         }
+
+        btnRotateMinus.setOnClickListener {
+            if (rotate > 1) {
+                rotate--
+                txtRotateValue.text = rotate.toString()
+            }
+        }
+
+        txtRotateValue.text = rotate.toString()
 
         btnPlcSettings.setOnClickListener {
             val intent = Intent(this, PlcSettingsActivity::class.java)
