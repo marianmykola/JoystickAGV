@@ -1,4 +1,4 @@
-package com.example.joystick
+package com.example.JoystickAGV
 
 import android.os.Bundle
 import android.widget.ArrayAdapter

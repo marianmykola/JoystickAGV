@@ -1,4 +1,4 @@
-package com.example.joystick
+package com.example.JoystickAGV
 
 import android.content.Intent
 import android.graphics.Color
