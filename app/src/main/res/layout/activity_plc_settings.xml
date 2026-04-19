@@ -212,6 +212,37 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <!-- Bit Position (only for BOOL type) -->
+        <LinearLayout
+            android:id="@+id/bitPositionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Bit:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etBitPosition"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="0-7"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
         <!-- Data Type -->
         <LinearLayout
             android:layout_width="match_parent"

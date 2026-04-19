@@ -1,9 +1,12 @@
 package com.example.JoystickAGV
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +21,7 @@ class PlcSettingsActivity : AppCompatActivity() {
     private lateinit var etSlot: EditText
     private lateinit var etDbNumber: EditText
     private lateinit var etOffset: EditText
+    private lateinit var etBitPosition: EditText
     private lateinit var etValue: EditText
     private lateinit var spinnerDataType: Spinner
     private lateinit var tvResponse: TextView
@@ -37,11 +41,22 @@ class PlcSettingsActivity : AppCompatActivity() {
         etSlot = findViewById(R.id.etSlot)
         etDbNumber = findViewById(R.id.etDbNumber)
         etOffset = findViewById(R.id.etOffset)
+        etBitPosition = findViewById(R.id.etBitPosition)
+        val bitPositionLayout = findViewById<LinearLayout>(R.id.bitPositionLayout)
         etValue = findViewById(R.id.etValue)
         spinnerDataType = findViewById(R.id.spinnerDataType)
         tvResponse = findViewById(R.id.tvResponse)
         btnRead = findViewById(R.id.btnRead)
         btnWrite = findViewById(R.id.btnWrite)
+
+        // Setup bit position field visibility
+        spinnerDataType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val isBoolType = dataTypeValues[position] == "BOOL"
+                bitPositionLayout.visibility = if (isBoolType) View.VISIBLE else View.GONE
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         // Setup data type spinner
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, dataTypes)
@@ -74,8 +89,8 @@ class PlcSettingsActivity : AppCompatActivity() {
                 val dataTypeIndex = spinnerDataType.selectedItemPosition
                 val dataType = dataTypeValues[dataTypeIndex]
 
-                // Create PLC instance
-                plc = PLC("AGV_PLC", ip, 64, 64, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
+                // Create PLC instance with correct parameters for S7-1500
+                plc = PLC("AGV_PLC", ip, 1024, 1024, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
 
                 val value = when (dataType) {
                     "INT" -> {
@@ -87,7 +102,10 @@ class PlcSettingsActivity : AppCompatActivity() {
                         "DINT: $dintValue"
                     }
                     "BOOL" -> {
-                        val bitPos = 0 // For simplicity, read bit 0
+                        val bitPos = etBitPosition.text.toString().toIntOrNull() ?: 0
+                        if (bitPos < 0 || bitPos > 7) {
+                            throw IllegalArgumentException("Bit position must be 0-7")
+                        }
                         val boolValue = plc!!.getBool(true, offset, bitPos)
                         "BOOL (bit $bitPos): $boolValue"
                     }
@@ -119,8 +137,8 @@ class PlcSettingsActivity : AppCompatActivity() {
                 val dataTypeIndex = spinnerDataType.selectedItemPosition
                 val dataType = dataTypeValues[dataTypeIndex]
 
-                // Create PLC instance
-                plc = PLC("AGV_PLC", ip, 64, 64, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
+                // Create PLC instance with correct parameters for S7-1500
+                plc = PLC("AGV_PLC", ip, 1024, 1024, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
 
                 when (dataType) {
                     "INT" -> {
@@ -133,7 +151,10 @@ class PlcSettingsActivity : AppCompatActivity() {
                     }
                     "BOOL" -> {
                         val value = valueStr.toBoolean()
-                        val bitPos = 0 // For simplicity, write to bit 0
+                        val bitPos = etBitPosition.text.toString().toIntOrNull() ?: 0
+                        if (bitPos < 0 || bitPos > 7) {
+                            throw IllegalArgumentException("Bit position must be 0-7")
+                        }
                         plc!!.putBool(false, offset, bitPos, value)
                     }
                 }
