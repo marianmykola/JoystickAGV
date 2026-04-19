@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("eu.mellotec.moka7:moka7:2.0")
+    implementation("com.github.xtrinch:moka7-live:master-SNAPSHOT")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

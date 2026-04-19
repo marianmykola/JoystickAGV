@@ -8,8 +8,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import eu.mellotec.moka7.Moka7
-import eu.mellotec.moka7.types.S7Client
+import si.trina.moka7.live.S7Client
 
 class PlcSettingsActivity : AppCompatActivity() {
 
@@ -26,7 +25,7 @@ class PlcSettingsActivity : AppCompatActivity() {
     private var s7Client: S7Client? = null
 
     private val dataTypes = arrayOf("INT (2 bytes)", "WORD (2 bytes)", "BYTE (1 byte)", "REAL (4 bytes)")
-    private val dataTypeValues = arrayOf(Moka7.S7WLInt, Moka7.S7WLWord, Moka7.S7WLByte, Moka7.S7WLReal)
+    private val dataTypeValues = arrayOf(S7Client.S7WLInt, S7Client.S7WLWord, S7Client.S7WLByte, S7Client.S7WLReal)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,13 +78,13 @@ class PlcSettingsActivity : AppCompatActivity() {
 
                 if (result == 0) {
                     val buffer = when (wordLen) {
-                        Moka7.S7WLByte -> ByteArray(1)
-                        Moka7.S7WLWord, Moka7.S7WLInt -> ByteArray(2)
-                        Moka7.S7WLReal -> ByteArray(4)
+                        S7Client.S7WLByte -> ByteArray(1)
+                        S7Client.S7WLWord, S7Client.S7WLInt -> ByteArray(2)
+                        S7Client.S7WLReal -> ByteArray(4)
                         else -> ByteArray(2)
                     }
 
-                    s7Client!!.readArea(Moka7.S7AreaDB, db, offset, 1, wordLen, buffer)
+                    s7Client!!.readArea(S7Client.S7AreaDB, db, offset, 1, wordLen, buffer)
                     val value = parseValueFromBuffer(buffer, wordLen)
                     s7Client!!.disconnect()
 
@@ -126,7 +125,7 @@ class PlcSettingsActivity : AppCompatActivity() {
                 if (result == 0) {
                     val buffer = createBufferFromValue(valueStr, wordLen)
 
-                    s7Client!!.writeArea(Moka7.S7AreaDB, db, offset, 1, wordLen, buffer)
+                    s7Client!!.writeArea(S7Client.S7AreaDB, db, offset, 1, wordLen, buffer)
                     s7Client!!.disconnect()
 
                     runOnUiThread {
@@ -150,17 +149,17 @@ class PlcSettingsActivity : AppCompatActivity() {
 
     private fun parseValueFromBuffer(buffer: ByteArray, wordLen: Int): String {
         return when (wordLen) {
-            Moka7.S7WLByte -> {
+            S7Client.S7WLByte -> {
                 (buffer[0].toInt() and 0xFF).toString()
             }
-            Moka7.S7WLWord -> {
+            S7Client.S7WLWord -> {
                 ((buffer[0].toInt() and 0xFF) or ((buffer[1].toInt() and 0xFF) shl 8)).toString()
             }
-            Moka7.S7WLInt -> {
+            S7Client.S7WLInt -> {
                 val value = ((buffer[0].toInt() and 0xFF) or ((buffer[1].toInt() and 0xFF) shl 8))
                 if (value > 32767) (value - 65536) else value
             }.toString()
-            Moka7.S7WLReal -> {
+            S7Client.S7WLReal -> {
                 val bits = ((buffer[0].toInt() and 0xFF) or
                            ((buffer[1].toInt() and 0xFF) shl 8) or
                            ((buffer[2].toInt() and 0xFF) shl 16) or
@@ -173,18 +172,18 @@ class PlcSettingsActivity : AppCompatActivity() {
 
     private fun createBufferFromValue(valueStr: String, wordLen: Int): ByteArray {
         return when (wordLen) {
-            Moka7.S7WLByte -> {
+            S7Client.S7WLByte -> {
                 val value = valueStr.toIntOrNull() ?: 0
                 byteArrayOf((value and 0xFF).toByte())
             }
-            Moka7.S7WLWord -> {
+            S7Client.S7WLWord -> {
                 val value = valueStr.toIntOrNull() ?: 0
                 byteArrayOf(
                     (value and 0xFF).toByte(),
                     ((value shr 8) and 0xFF).toByte()
                 )
             }
-            Moka7.S7WLInt -> {
+            S7Client.S7WLInt -> {
                 val value = valueStr.toIntOrNull() ?: 0
                 val intValue = if (value < 0) value + 65536 else value
                 byteArrayOf(
@@ -192,7 +191,7 @@ class PlcSettingsActivity : AppCompatActivity() {
                     ((intValue shr 8) and 0xFF).toByte()
                 )
             }
-            Moka7.S7WLReal -> {
+            S7Client.S7WLReal -> {
                 val value = valueStr.toFloatOrNull() ?: 0.0f
                 val bits = java.lang.Float.floatToIntBits(value)
                 byteArrayOf(
