@@ -111,10 +111,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateText() {
-        val lxPercent = lx / 10
-        val lyPercent = ly / 10
-        val rxPercent = rx / 10
-        val ryPercent = ry / 10
+        val lxPercent = lx
+        val lyPercent = ly
+        val rxPercent = rx
+        val ryPercent = ry
         txtValues.text = "L: ${lxPercent}%, ${lyPercent}% | R: ${rxPercent}%, ${ryPercent}%"
     }
 
