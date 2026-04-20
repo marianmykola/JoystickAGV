@@ -243,6 +243,46 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <!-- Direct PLC Address Input -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quick Address"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etDirectAddress"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="DB5.DBX380.0 or DB5.DBB372"
+                android:inputType="text"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnParseAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Parse"
+                android:textSize="12sp"
+                android:textColor="@android:color/white"
+                android:background="@color/darker_gray" />
+        </LinearLayout>
+
         <!-- Data Type -->
         <LinearLayout
             android:layout_width="match_parent"

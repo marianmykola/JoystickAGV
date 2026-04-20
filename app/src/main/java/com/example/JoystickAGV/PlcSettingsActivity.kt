@@ -23,6 +23,8 @@ class PlcSettingsActivity : AppCompatActivity() {
     private lateinit var etOffset: EditText
     private lateinit var etBitPosition: EditText
     private lateinit var etValue: EditText
+    private lateinit var etDirectAddress: EditText
+    private lateinit var btnParseAddress: Button
     private lateinit var spinnerDataType: Spinner
     private lateinit var tvResponse: TextView
     private lateinit var btnRead: Button
@@ -44,6 +46,8 @@ class PlcSettingsActivity : AppCompatActivity() {
         etBitPosition = findViewById(R.id.etBitPosition)
         val bitPositionLayout = findViewById<LinearLayout>(R.id.bitPositionLayout)
         etValue = findViewById(R.id.etValue)
+        etDirectAddress = findViewById(R.id.etDirectAddress)
+        btnParseAddress = findViewById(R.id.btnParseAddress)
         spinnerDataType = findViewById(R.id.spinnerDataType)
         tvResponse = findViewById(R.id.tvResponse)
         btnRead = findViewById(R.id.btnRead)
@@ -75,6 +79,71 @@ class PlcSettingsActivity : AppCompatActivity() {
 
         btnWrite.setOnClickListener {
             writeToPLC()
+        }
+
+        btnParseAddress.setOnClickListener {
+            parseDirectAddress()
+        }
+    }
+
+    private fun parseDirectAddress() {
+        val address = etDirectAddress.text.toString().trim()
+        
+        if (address.isEmpty()) {
+            Toast.makeText(this, "Please enter an address", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            // Parse DB5.DBX380.0 format
+            val dbPattern = Regex("""DB(\d+)\.(DBB|DBW|DBD|DBX)(\d+)(?:\.(\d+))?""")
+            val match = dbPattern.find(address.uppercase())
+            
+            if (match != null) {
+                val dbNumber = match.groupValues[1].toInt()
+                val areaType = match.groupValues[2] // DBB, DBW, DBD, DBX
+                val offset = match.groupValues[3].toInt()
+                val bitPosition = match.groupValues[4].toIntOrNull()
+                
+                // Set DB number
+                etDbNumber.setText(dbNumber.toString())
+                
+                // Set offset
+                etOffset.setText(offset.toString())
+                
+                // Determine data type and set bit position if needed
+                when (areaType) {
+                    "DBX" -> {
+                        // Bit access - need bit position
+                        if (bitPosition != null && bitPosition in 0..7) {
+                            spinnerDataType.setSelection(dataTypeValues.indexOf("BOOL"))
+                            etBitPosition.setText(bitPosition.toString())
+                        } else {
+                            throw IllegalArgumentException("Invalid bit position for DBX. Must be 0-7")
+                        }
+                    }
+                    "DBB" -> {
+                        // Byte access - can be INT or BOOL
+                        spinnerDataType.setSelection(dataTypeValues.indexOf("INT"))
+                    }
+                    "DBW" -> {
+                        // Word access - INT
+                        spinnerDataType.setSelection(dataTypeValues.indexOf("INT"))
+                    }
+                    "DBD" -> {
+                        // Double word access - DINT
+                        spinnerDataType.setSelection(dataTypeValues.indexOf("DINT"))
+                    }
+                }
+                
+                Toast.makeText(this, "Address parsed successfully!", Toast.LENGTH_SHORT).show()
+                
+            } else {
+                throw IllegalArgumentException("Invalid address format. Use: DB5.DBX380.0 or DB5.DBB372")
+            }
+            
+        } catch (e: Exception) {
+            Toast.makeText(this, "Parse error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
