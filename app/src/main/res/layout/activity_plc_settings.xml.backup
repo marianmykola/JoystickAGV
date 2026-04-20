@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="@android:color/black">
+
+    <!-- Left Column - Input Fields -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingEnd="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="IP:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etIp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="192.168.0.40"
+                android:inputType="text"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Rack:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etRack"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="0"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Slot:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etSlot"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="1"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Memory Settings Group -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Memory Access"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@color/darker_gray"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="DB:"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etDbNumber"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="5"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:background="@android:color/black"
+                android:textColorHighlight="@android:color/holo_blue_light"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@color/darker_gray"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Offset:"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etOffset"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="372"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:background="@android:color/black"
+                android:textColorHighlight="@android:color/holo_blue_light"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Value:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etValue"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="0"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Bit Position (only for BOOL type) -->
+        <LinearLayout
+            android:id="@+id/bitPositionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Bit:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/etBitPosition"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="0-7"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Direct PLC Address Input -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quick Address"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etDirectAddress"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="DB5.DBX380.0 or DB5.DBB372"
+                android:inputType="text"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/gray"
+                android:backgroundTint="@color/gray"
+                android:padding="8dp"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnParseAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Parse"
+                android:textSize="12sp"
+                android:textColor="@android:color/white"
+                android:background="@color/darker_gray" />
+        </LinearLayout>
+
+        <!-- Data Type -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Type:"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center_vertical" />
+
+            <Spinner
+                android:id="@+id/spinnerDataType"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/gray"
+                android:popupBackground="@color/darker_gray" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Right Column - Actions and Response -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="16dp">
+
+        <!-- Action Buttons -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Actions"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnRead"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="READ"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_blue_dark"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnWrite"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="WRITE"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_green_dark"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Response Area -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Response"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/darker_gray"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvResponse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Waiting for action..."
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:fontFamily="monospace" />
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>
