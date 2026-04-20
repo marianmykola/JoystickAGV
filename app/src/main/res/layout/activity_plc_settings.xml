@@ -132,56 +132,66 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp"
+            android:background="@color/darker_gray"
+            android:padding="12dp">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="DB:"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:gravity="center_vertical" />
 
             <EditText
                 android:id="@+id/etDbNumber"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:hint="0"
+                android:hint="5"
                 android:inputType="number"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/gray"
-                android:backgroundTint="@color/gray"
-                android:padding="8dp"
-                android:textSize="14sp" />
+                android:background="@android:color/black"
+                android:textColorHighlight="@android:color/holo_blue_light"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp"
+            android:background="@color/darker_gray"
+            android:padding="12dp">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Offset:"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:gravity="center_vertical" />
 
             <EditText
                 android:id="@+id/etOffset"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:hint="0"
+                android:hint="372"
                 android:inputType="number"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/gray"
-                android:backgroundTint="@color/gray"
-                android:padding="8dp"
-                android:textSize="14sp" />
+                android:background="@android:color/black"
+                android:textColorHighlight="@android:color/holo_blue_light"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp" />
         </LinearLayout>
 
         <LinearLayout
