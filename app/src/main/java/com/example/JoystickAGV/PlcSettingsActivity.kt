@@ -161,6 +161,12 @@ class PlcSettingsActivity : AppCompatActivity() {
                 // Create PLC instance with correct parameters for S7-1500
                 plc = PLC("AGV_PLC", ip, 1024, 1024, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
 
+                // Wait for connection and check if successful
+                Thread.sleep(1000) // Give time for connection
+                if (!plc!!.connected) {
+                    throw Exception("PLC connection failed. Check IP, rack, slot settings.")
+                }
+
                 val value = when (dataType) {
                     "INT" -> {
                         val intValue = plc!!.getInt(true, offset)
@@ -208,6 +214,12 @@ class PlcSettingsActivity : AppCompatActivity() {
 
                 // Create PLC instance with correct parameters for S7-1500
                 plc = PLC("AGV_PLC", ip, 1024, 1024, db, db, doubleArrayOf(), rack, slot, S7.S7AreaDB, S7.S7AreaDB)
+
+                // Wait for connection and check if successful
+                Thread.sleep(1000) // Give time for connection
+                if (!plc!!.connected) {
+                    throw Exception("PLC connection failed. Check IP, rack, slot settings.")
+                }
 
                 when (dataType) {
                     "INT" -> {

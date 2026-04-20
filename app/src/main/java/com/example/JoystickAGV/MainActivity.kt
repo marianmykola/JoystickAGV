@@ -144,6 +144,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendUdp() {
+        if (!sending) return // Don't send if not connected
+        
         Thread {
             var socket: DatagramSocket? = null
             try {
@@ -173,7 +175,9 @@ class MainActivity : AppCompatActivity() {
 
             } catch (e: Exception) {
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    if (sending) { // Only show error if we're supposed to be sending
+                        Toast.makeText(this@MainActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 e.printStackTrace()
             } finally {
