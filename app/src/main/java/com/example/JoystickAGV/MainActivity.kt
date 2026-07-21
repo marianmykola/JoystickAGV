@@ -194,55 +194,55 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendUdp() {
         if (!sending) return
-
-        Thread {
+            Thread {
             var socket: DatagramSocket? = null
-            try {
-                // Если процесс привязался к сети, создаем обычный сокет
-                // При желании можно явно привязать сокет к сети Wi-Fi:
-                val currentWifi = wifiNetwork
-                socket = if (currentWifi != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.23) {
-                    DatagramSocket().apply {
-                        currentWifi.bindSocket(this)
-                    }
-                } else {
-                    DatagramSocket()
-                }
-
-                val address = InetAddress.getByName(ip)
-
-                val buffer = ByteBuffer.allocate(12)
-                buffer.put(1.toByte())  // version
-                buffer.put(packetNumber.toByte())  // packet number
-                buffer.put(rotate.toByte())  // rotate
-                val statusByte = when {
-                    estopChecked -> 0.toByte()
-                    dmsChecked -> 3.toByte()
-                    else -> 1.toByte()
-                }
-                buffer.put(statusByte)  // status
-                buffer.putShort(lx.toShort())  // lx
-                buffer.putShort(ly.toShort())  // ly
-                buffer.putShort(rx.toShort())  // rx
-                buffer.putShort(ry.toShort())  // ry
-
-                val data = buffer.array()
-                val packet = DatagramPacket(data, data.size, address, port)
-                socket.send(packet)
-
-                packetNumber = (packetNumber + 1) % 256
-
-            } catch (e: Exception) {
-                runOnUiThread {
-                    if (sending) {
-                        Toast.makeText(this@MainActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                e.printStackTrace()
-            } finally {
-                socket?.close()
+        try {
+        val currentWifi = wifiNetwork
+        // ✅ Исправлено Build.VERSION_CODES.23 -> Build.VERSION_CODES.M
+        socket = if (currentWifi != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            DatagramSocket().apply {
+                currentWifi.bindSocket(this)
             }
-        }.start()
+        } else {
+            DatagramSocket()
+        }
+
+        val address = InetAddress.getByName(ip)
+
+        val buffer = ByteBuffer.allocate(12)
+        buffer.put(1.toByte())  // version
+        buffer.put(packetNumber.toByte())  // packet number
+        buffer.put(rotate.toByte())  // rotate
+        val statusByte = when {
+            estopChecked -> 0.toByte()
+            dmsChecked -> 3.toByte()
+            else -> 1.toByte()
+        }
+        buffer.put(statusByte)  // status
+        buffer.putShort(lx.toShort())  // lx
+        buffer.putShort(ly.toShort())  // ly
+        buffer.putShort(rx.toShort())  // rx
+        buffer.putShort(ry.toShort())  // ry
+
+        val data = buffer.array()
+        val packet = DatagramPacket(data, data.size, address, port)
+        socket.send(packet)
+
+        packetNumber = (packetNumber + 1) % 256
+
+    } catch (e: Exception) {
+        runOnUiThread {
+            if (sending) {
+                Toast.makeText(this@MainActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            e.printStackTrace()
+           } finally {
+            socket?.close()
+        }
+    }.start()
+        
+       
     }
 
     private fun checkNetworkPermissions() {
