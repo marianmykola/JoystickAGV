@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         networkCallback = object : ConnectivityManager.NetworkCallback() {
-            override stroke onAvailable(network: Network) {
+            override fun onAvailable(network: Network) {
                 wifiNetwork = network
                 // Привязываем все сетевые запросы приложения к Wi-Fi интерфейсу
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
